@@ -1,0 +1,248 @@
+#include <stdio.h>
+#include <malloc.h>
+#define ISEMPTY printf("\nEMPTY LIST:");
+struct node
+{
+    int value;
+    char name[];
+    struct node *next;
+}node;
+
+typedef struct node snode;
+snode *create_node(int,char[]);
+void insert_node_last();
+void delete_pos();
+void search();
+void update_val();
+void display();
+void rev_display(snode *);
+
+snode *newnode, *ptr, *prev, *temp;
+snode *first = NULL, *last = NULL;
+int main()
+ {
+    int ch;
+    char ans = 'Y';
+
+    while (ans == 'Y'||ans == 'y')
+    {
+        printf("\n---------------------------------\n");
+        printf("\nOperations on singly linked list\n");
+        printf("\n---------------------------------\n");
+        printf("\n1.Insert node at last");
+        printf("\n2.Delete Node from any Position");
+        printf("\n3.Update Node Value");
+        printf("\n4.Search Element in the linked list");
+        printf("\n5.Display List from Beginning to end");
+        printf("\n6.Exit\n");
+        printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        printf("\nEnter your choice");
+        scanf("%d", &ch);
+
+        switch (ch)
+        {
+            case 1:
+            printf("\n...Adding new Client to the network \n");
+            insert_node_last();
+            break;
+        case 2:
+            printf("\n...Client exiting from the network...\n");
+            delete_pos();
+            break;
+        case 3:
+            printf("\n...Updating Associativity of the node...\n");
+            update_val();
+            break;
+        case 4:
+            printf("\n...Searching for given Client in the network...\n");
+            search();
+            break;
+        case 5:
+            printf("\n...Showing Number of Users Present...\n");
+            display();
+            break;
+        case 6:
+            printf("\n...Exiting...\n");
+            return 0;
+            break;
+        default:
+            printf("\n...Invalid Choice...\n");
+            break;
+        }
+        printf("\nYOU WANT TO CONTINUE (Y/N)");
+        scanf(" %c", &ans);
+    }
+    return 0;
+ }
+snode* create_node(int val,char *naam)
+{
+    newnode = (snode *)malloc(sizeof(snode));
+    if (newnode == NULL)
+    {
+        printf("\nMemory was not allocated");
+        return 0;
+    }
+    else
+    {
+        newnode->value = val;
+        newnode->name  =naam;
+        newnode->next = NULL;
+        return newnode;
+    }
+}
+
+
+void insert_node_last()
+{
+    int val;
+    char naam[10];
+    printf("\nEnter the value for the Node:");
+    scanf("%d", &val);
+    printf ("Please enter a name (4 char max): ");
+    gets(naam);
+    newnode = create_node(val,naam);
+    if (first == last && last == NULL)
+    {
+        first = last = newnode;
+        first->next = NULL;
+        last->next = NULL;
+    }
+    else
+    {
+        last->next = newnode;
+        last = newnode;
+        last->next = NULL;
+    }
+ printf("\n----INSERTED----");
+}
+void delete_pos()
+{
+    int pos, cnt = 0, i;
+
+    if (first == NULL)
+    {
+        ISEMPTY;
+        printf(":No node to delete\n");
+    }
+    else
+    {
+        printf("\nEnter the position of value to be deleted:");
+        scanf(" %d", &pos);
+        ptr = first;
+        if (pos == 1)
+        {
+            first = ptr->next;
+            printf("\nElement deleted");
+        }
+        else
+        {
+            while (ptr != NULL)
+            {
+                ptr = ptr->next;
+                cnt = cnt + 1;
+            }
+            if (pos > 0 && pos <= cnt)
+            {
+                ptr = first;
+                for (i = 1;i < pos;i++)
+                {
+                    prev = ptr;
+                    ptr = ptr->next;
+                }
+                prev->next = ptr->next;
+            }
+            else
+            {
+                printf("Position is out of range");
+            }
+        free(ptr);
+        printf("\nElement deleted");
+        }
+    }
+}
+void update_val()
+{
+    int oldval, newval, flag = 0;
+
+    if (first == NULL)
+    {
+        ISEMPTY;
+        printf(":No nodes in the list to update\n");
+    }
+    else
+    {
+        printf("\nEnter the value to be updated:");
+        scanf("%d", &oldval);
+        printf("\nEnter the newvalue:");
+        scanf("%d", &newval);
+        for (ptr = first;ptr != NULL;ptr = ptr->next)
+        {
+            if (ptr->value == oldval)
+            {
+                ptr->value = newval;
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 1)
+        {
+            printf("\nUpdated Successfully");
+        }
+        else
+        {
+            printf("\nValue not found in List");
+        }
+    }
+}
+
+/*
+ * searching an element in a non-empty list
+ */
+void search()
+{
+    int flag = 0, key, pos = 0;
+
+    if (first == NULL)
+    {
+        ISEMPTY;
+        printf(":No nodes in the list\n");
+    }
+    else
+    {
+        printf("\nEnter the value to search");
+        scanf("%d", &key);
+        for (ptr = first;ptr != NULL;ptr = ptr->next)
+        {
+            pos = pos + 1;
+            if (ptr->value == key)
+            {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 1)
+        {
+            printf("\nElement %d found at %d position\n", key, pos);
+        }
+        else
+        {
+            printf("\nElement %d not found in list\n", key);
+        }
+    }
+}
+void display()
+{
+    if (first == NULL)
+    {
+        ISEMPTY;
+        printf(":No nodes in the list to display\n");
+    }
+    else
+    {
+        for (ptr = first;ptr != NULL;ptr = ptr->next)
+        {
+            printf("%d\t", ptr->value);
+        }
+    }
+}
+
